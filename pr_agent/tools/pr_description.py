@@ -199,7 +199,7 @@ class PRDescription:
 
         return response
 
-    def _get_jira_ticket_no_from_branch(branch_name: str) -> str:
+    def _get_jira_ticket_no_from_branch(self, branch_name: str) -> str:
         pattern = r'(\w+-\d+)'
         match = re.search(pattern, branch_name)
         return match.group(0) if match else None
