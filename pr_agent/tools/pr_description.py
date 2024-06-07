@@ -199,6 +199,11 @@ class PRDescription:
 
         return response
 
+    def _get_jira_ticket_no_from_branch(branch_name: str) -> str:
+        pattern = r'(\w+-\d+)'
+        match = re.search(pattern, branch_name)
+        return match.group(0) if match else None
+
     def _prepare_data(self):
         # Load the AI prediction data into a dictionary
         self.data = load_yaml(self.prediction.strip())
@@ -210,6 +215,9 @@ class PRDescription:
         if 'User Description' in self.data:
             if 'description' in self.data:
                 description_value = self.data.pop('description')
+                ticket_no = self._get_jira_ticket_no_from_branch(self.vars.branch)
+                if ticket_no:
+                    description_value = f"{description_value}\n\n- Related Jira Issue(s): [QABUG-952](https://tripalink.atlassian.net/browse/{ticket_no})"
                 self.data['User Description'] = self.data.pop('User Description').replace('## Description', f'## Description\n\n{description_value}')
             else:
                 self.data['User Description'] = self.data.pop('User Description')
