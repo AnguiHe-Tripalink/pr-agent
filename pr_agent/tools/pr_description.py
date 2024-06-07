@@ -204,8 +204,7 @@ class PRDescription:
         self.data = load_yaml(self.prediction.strip())
 
         if get_settings().pr_description.add_original_user_description and self.user_description:
-            # self.data["User Description"] = self.user_description
-            self.data["User Description"] = "User Description"
+            self.data["User Description"] = self.user_description
 
         # re-order keys
         if 'User Description' in self.data:
