@@ -210,7 +210,8 @@ class PRDescription:
         # re-order keys
         if 'User Description' in self.data:
             if 'description' in self.data:
-                self.data['User Description'] = self.data.pop('User Description').replace('## Description', f'## Description\n\n{self.data.pop('description')}')
+                description_value = self.data.pop('description')
+                self.data['User Description'] = self.data.pop('User Description').replace('## Description', f'## Description\n\n{description_value}')
             else:
                 self.data['User Description'] = self.data.pop('User Description')
 
