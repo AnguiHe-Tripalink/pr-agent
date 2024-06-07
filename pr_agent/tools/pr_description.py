@@ -73,6 +73,7 @@ class PRDescription:
         self.COLLAPSIBLE_FILE_LIST_THRESHOLD = 8
 
     async def run(self):
+        return ""
         try:
             get_logger().info(f"Generating a PR description for pr_id: {self.pr_id}")
             relevant_configs = {'pr_description': dict(get_settings().pr_description),
