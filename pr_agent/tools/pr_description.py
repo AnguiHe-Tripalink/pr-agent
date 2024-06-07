@@ -208,7 +208,11 @@ class PRDescription:
 
         # re-order keys
         if 'User Description' in self.data:
-            self.data['User Description'] = self.data.pop('User Description')
+            if 'desciption' in self.data:
+                self.data['User Description'] = self.data.pop('User Description').replace('## Description', f'## Description\n\n{self.data.pop('description')}')
+            else:
+                self.data['User Description'] = self.data.pop('User Description')
+
         if 'title' in self.data:
             self.data['title'] = self.data.pop('title')
         if 'type' in self.data:
@@ -427,11 +431,11 @@ class PRDescription:
 
 
 </details>
-    
+
 
   </td>
   <td><a href="{link}">{diff_plus_minus}</a>{delta_nbsp}</td>
-</tr>                    
+</tr>
 """
                 if use_collapsible_file_list:
                     pr_body += """</table></details></td></tr>"""
