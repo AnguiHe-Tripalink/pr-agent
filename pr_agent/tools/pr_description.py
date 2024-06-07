@@ -208,7 +208,7 @@ class PRDescription:
 
         # re-order keys
         if 'User Description' in self.data:
-            if 'desciption' in self.data:
+            if 'description' in self.data:
                 self.data['User Description'] = self.data.pop('User Description').replace('## Description', f'## Description\n\n{self.data.pop('description')}')
             else:
                 self.data['User Description'] = self.data.pop('User Description')
@@ -219,8 +219,8 @@ class PRDescription:
             self.data['type'] = self.data.pop('type')
         if 'labels' in self.data:
             self.data['labels'] = self.data.pop('labels')
-        if 'description' in self.data:
-            self.data['description'] = self.data.pop('description')
+        # if 'description' in self.data:
+        #     self.data['description'] = self.data.pop('description')
         if 'pr_files' in self.data:
             self.data['pr_files'] = self.data.pop('pr_files')
 
