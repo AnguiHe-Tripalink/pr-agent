@@ -51,6 +51,7 @@ class PRDescription:
             "language": self.main_pr_language,
             "diff": "",  # empty diff for initial calculation
             "extra_instructions": get_settings().pr_description.extra_instructions,
+            "bring_origin_description": get_settings().pr_description.bring_origin_description,
             "commit_messages_str": self.git_provider.get_commit_messages(),
             "enable_custom_labels": get_settings().config.enable_custom_labels,
             "custom_labels_class": "",  # will be filled if necessary in 'set_custom_labels' function
@@ -215,17 +216,22 @@ class PRDescription:
         if 'User Description' in self.data:
             if 'description' in self.data:
                 description_value = self.data.pop('description')
-                ticket_no = self._get_jira_ticket_no_from_branch('QABUG-952-update-button-ui')
+                branch_name = self.git_provider.get_pr_branch()
+                ticket_no = self._get_jira_ticket_no_from_branch(branch_name)
                 if ticket_no:
-                    description_value = f"{description_value}\n\n- Related Jira Issue(s): [QABUG-952](https://tripalink.atlassian.net/browse/{ticket_no})"
+                    description_value = f"{description_value}\n- Related Jira Issue(s): [JIRA-Link](https://tripalink.atlassian.net/browse/{ticket_no})"
                 self.data['User Description'] = self.data.pop('User Description').replace('## Description', f'## Description\n\n{description_value}')
+            if 'type' in self.data:
+                pr_types = self.data.pop('type')
+                markdown_pr_type = "\n".join([f"- [x] {item}" for item in pr_types])
+                self.data['User Description'] = self.data.pop('User Description').replace('## What type of PR is this?', f'## What type of PR is this?\n\n{markdown_pr_type}')
             else:
                 self.data['User Description'] = self.data.pop('User Description')
 
         if 'title' in self.data:
             self.data['title'] = self.data.pop('title')
-        if 'type' in self.data:
-            self.data['type'] = self.data.pop('type')
+        # if 'type' in self.data:
+        #     self.data['type'] = self.data.pop('type')
         if 'labels' in self.data:
             self.data['labels'] = self.data.pop('labels')
         # if 'description' in self.data:
@@ -334,7 +340,8 @@ class PRDescription:
                     key_publish = "PR Type"
                 # elif key_publish == "Description":
                 #     key_publish = "PR Description"
-                pr_body += f"### **{key_publish}**\n"
+                if key_publish != "User description":
+                    pr_body += f"## **{key_publish}**\n"
             if 'walkthrough' in key.lower():
                 if self.git_provider.is_supported("gfm_markdown"):
                     pr_body += "<details> <summary>files:</summary>\n\n"
